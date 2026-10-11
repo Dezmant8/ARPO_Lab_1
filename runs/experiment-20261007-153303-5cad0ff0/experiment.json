@@ -1,0 +1,143 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-10-07T12:33:03.991842+00:00",
+  "config": {
+    "model": {
+      "base_url": "http://127.0.0.1:8080/v1",
+      "name": "/Users/egorbulanov/Documents/GitHub/ARPO_solver_macos/models/qwen-coder",
+      "api_key_env": "ARPO_API_KEY",
+      "allow_remote": false,
+      "timeout_s": 600,
+      "max_tokens": 6144,
+      "temperature": 0.7,
+      "top_p": 0.8,
+      "seed": 42,
+      "max_retries": 1,
+      "retry_delay_s": 1.0,
+      "require_usage": true,
+      "extra_body": {
+        "top_k": 20,
+        "repetition_penalty": 1.0
+      }
+    },
+    "agent": {
+      "system_prompt": "Implement the user's task as one complete source file.\nReturn exactly ONE fenced code block containing the full file. No explanation, no alternatives,\nno tool calls, no patches. The wrapper saves the code and runs independent checks.\nIf a check fails, return the full corrected file in the same format. Never weaken tests.\nInitial project headers define the required ABI. Match their function names and signatures\nEXACTLY, including letter case; do not rename functions or add prefixes.\nThe user supplies the language, specification, restrictions and acceptance criteria.\n",
+      "protocol": "single-file",
+      "fallback_file": "SourceFiles/BitonicMethods.c",
+      "max_requests": 8,
+      "max_total_tokens": 300000,
+      "max_wall_s": 3600,
+      "max_actions_per_response": 12,
+      "max_context_chars": 140000,
+      "workspace_manifest": false,
+      "context_files": [
+        "HeaderFiles/ArpoMethods.h",
+        "SharedFiles/IEcoLab64.h",
+        ".sdk/Eco.MemoryManager1/SharedFiles/IEcoMemoryAllocator1.h"
+      ],
+      "max_identical_replies": 3
+    },
+    "tools": {
+      "allow_run": true,
+      "allowed_executables": [
+        "clang",
+        "cc",
+        "make",
+        "cmake",
+        "ctest"
+      ],
+      "timeout_s": 150,
+      "max_output_chars": 12000,
+      "max_file_bytes": 200000,
+      "max_workspace_bytes": 100000000,
+      "max_list_entries": 300,
+      "sandbox": "required",
+      "environment": {},
+      "read_only_paths": [
+        ".sdk",
+        ".arpo-build.py",
+        ".arpo-toolchain.json",
+        "arpo-scaffold.json",
+        "SharedFiles",
+        "HeaderFiles",
+        "UnitTestFiles",
+        "SourceFiles/CEcoLab64.c",
+        "SourceFiles/CEcoLab64Factory.c"
+      ]
+    },
+    "validation": {
+      "commands": [
+        [
+          "/Users/egorbulanov/Documents/GitHub/ARPO_solver_macos/.venv/bin/python",
+          "/Users/egorbulanov/Documents/GitHub/ARPO_solver_macos/src/arpo_lab/eco_build.py",
+          "--project",
+          "{workspace}",
+          "--run",
+          "--sdk-sha256",
+          "75d6d2171f845f356a2c9f445b963217fca0f8c4d741ffcea08f04ec9146464a"
+        ],
+        [
+          "/Users/egorbulanov/Documents/GitHub/ARPO_solver_macos/.venv/bin/python",
+          "/Users/egorbulanov/Documents/GitHub/ARPO_solver_macos/labs/bitonic-64-20261007/checks/validate.py",
+          "{workspace}",
+          "/Users/egorbulanov/Documents/GitHub/ARPO_solver_macos/src/arpo_lab/eco_build.py",
+          "/Users/egorbulanov/Documents/GitHub/ARPO_solver_macos/labs/bitonic-64-20261007/checks/reference.c"
+        ]
+      ],
+      "timeout_s": 180,
+      "feedback_chars": 12000
+    },
+    "experiment": {
+      "repeats": 3,
+      "order": "alternate",
+      "warmup": true
+    },
+    "pricing": {
+      "input_per_million": 0.0,
+      "output_per_million": 0.0,
+      "currency": "USD"
+    },
+    "report": {
+      "title": "Лабораторная работа №64. Битонная сортировка",
+      "author": "Не указан",
+      "group": "Не указана"
+    }
+  },
+  "prompts_sha256": {
+    "short": "efb73472053f61d8a5b34065425eed407f8df14c2dc8b1ccc79603578665afd2",
+    "detailed": "812cd49a2eff39b6d50358c9c8c5874e274b6f814baf8158fa805fccafe20bb7"
+  },
+  "runs": [
+    {
+      "path": "20261007-153309-3b5aa46a",
+      "label": "short",
+      "repeat": 1
+    },
+    {
+      "path": "20261007-154205-0d26a8d8",
+      "label": "detailed",
+      "repeat": 1
+    },
+    {
+      "path": "20261007-155038-843acf04",
+      "label": "detailed",
+      "repeat": 2
+    },
+    {
+      "path": "20261007-155944-d73f75e9",
+      "label": "short",
+      "repeat": 2
+    },
+    {
+      "path": "20261007-160822-131db6cf",
+      "label": "short",
+      "repeat": 3
+    },
+    {
+      "path": "20261007-161626-8c414202",
+      "label": "detailed",
+      "repeat": 3
+    }
+  ],
+  "finished_at": "2026-10-07T13:29:34.032786+00:00"
+}

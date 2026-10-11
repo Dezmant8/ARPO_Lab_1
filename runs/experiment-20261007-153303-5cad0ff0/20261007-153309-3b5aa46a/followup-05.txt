@@ -1,0 +1,9 @@
+Keep the public lab_bitonic_sort stub for this step. Return the complete file with the StageContext typedef and the corrected callback. Do not implement allocations or the full Sort yet.
+Compiler errors: your StageContext omitted the field BitonicCompare compare; add it. Your pointer expression used right_index * * ctx->width; use one multiplication operator, since width is an integer and not a pointer.
+The callback's logic also requires correction. Remove ALL skipping based on i>=count, partner>=count, left_index>=count, or right_index>=count. Network positions extend to N, and padding is handled by logical comparison. Remove the exchange of local indices before comparing them. Do not compare or sort the numeric index values: compare the records they identify.
+For each i assigned to this lane, let partner=i XOR j. Skip the pair if i>=partner; this is the ONLY pair filter. Then read A=indices[i] and B=indices[partner]. Compute signed int order as follows:
+- A==count and B==count: order=0.
+- A==count only: order=1.
+- B==count only: order=-1.
+- Both real: order is compare(base+A*width,base+B*width).
+If (i AND k)==0, swap the TWO stored indices when order>0. Otherwise swap when order<0. Both ascending and descending directions are essential. Use one temporary index for the swap. Never modify base. All declarations precede statements. Retain the supplied StageContext definition including compare and the exact nine-argument public ABI. Include only ArpoMethods.h, use C89, and return one full fenced file under 110 lines.

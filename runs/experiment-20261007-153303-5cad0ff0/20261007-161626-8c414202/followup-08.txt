@@ -1,0 +1,2 @@
+Compiler error: StageContext has no member named indices. Add exactly uint32_t* indices; to StageContext. Keep every other field and ALL callback logic unchanged. Keep the public stub returning -1. Return the complete file with only this missing field corrected.
+Also fix the pair ownership guard: immediately after partner=i XOR ctx->j, skip if i>=partner (replace the partner>=N guard). Otherwise both endpoints exchange each pair and undo it. Keep all remaining logic unchanged.

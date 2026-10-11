@@ -1,0 +1,20 @@
+{
+  "topic": "64. Битонная сортировка / Bitonic sort",
+  "sdk": {
+    "source": "/Users/egorbulanov/Downloads/Design operating systems",
+    "sdk": "/Users/egorbulanov/Documents/GitHub/ARPO_solver_macos/.eco/sdk-2f23fffb9e81/Eco.Framework",
+    "sdk_sha256": "75d6d2171f845f356a2c9f445b963217fca0f8c4d741ffcea08f04ec9146464a",
+    "framework_archive": "Eco.Framework_20260918.zip",
+    "framework_archive_sha256": "2f23fffb9e81d4e5423153e2ff7236578ae5e947501a1e5c4168d3dc2b3c08b3",
+    "wizard": "/Users/egorbulanov/Documents/GitHub/ARPO_solver_macos/.eco/bin/eco-wizard-a101b5f2942c",
+    "wizard_archive_sha256": "a101b5f2942c1aa05e67309e54e0e3a2d2b3146e763fb019d3b107a1465eda06",
+    "wizard_version": "0.2.2",
+    "prepared_at": "2026-10-04T23:05:58.958927+00:00"
+  },
+  "validators": {
+    "/Users/egorbulanov/Documents/GitHub/ARPO_solver_macos/src/arpo_lab/eco_build.py": "8812640eff13d928981aa9cdd5d529a129068c0cb0d2a3b68a11f296a60fb1d7",
+    "/Users/egorbulanov/Documents/GitHub/ARPO_solver_macos/labs/bitonic-64-20261007/checks/validate.py": "7b6feac969bcda8a49ac5cc966e34ed08dbddf486371c756f297e4ccad92ef7d",
+    "/Users/egorbulanov/Documents/GitHub/ARPO_solver_macos/labs/bitonic-64-20261007/checks/reference.c": "58c4b4d099acdd2596c0537a485f349d9756bb472c634dc58627ddbf93009347"
+  },
+  "prepared_at": "2026-10-07T13:29:34.037105+00:00"
+}

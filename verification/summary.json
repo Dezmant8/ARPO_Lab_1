@@ -1,0 +1,56 @@
+[
+  {
+    "path": "20261007-153309-3b5aa46a",
+    "label": "short",
+    "repeat": 1,
+    "directory": "solutions/short-1",
+    "algorithm_sha256": "ddcdce83a38113b93bd78729c2e1b57ecbc443babb2aa7bf63f6e3d4f2380a63",
+    "passed": true,
+    "cases": 1664,
+    "sanitizer": "undefined",
+    "public_verification_active_s": 1.8360501669812948,
+    "public_console": "status=0 padded=8 stages=6 network_pairs=24 workers=4\n-7,-3,0,1,1,8,9",
+    "build": {
+      "component_sources": [
+        "SourceFiles/BitonicMethods.c",
+        "SourceFiles/CEcoLab64.c",
+        "SourceFiles/CEcoLab64Factory.c",
+        "SourceFiles/SortFacade.c"
+      ],
+      "library": "/Users/egorbulanov/Documents/GitHub/ARPO_solver_macos/labs/bitonic-64-20261007/solutions/short-1/BuildFiles/PublicIndependent/libcomponent.a",
+      "client": "/Users/egorbulanov/Documents/GitHub/ARPO_solver_macos/labs/bitonic-64-20261007/solutions/short-1/BuildFiles/PublicIndependent/trusted-client",
+      "architecture": "arm64",
+      "standard": "c89",
+      "sanitizer": "undefined",
+      "sdk_sha256": "75d6d2171f845f356a2c9f445b963217fca0f8c4d741ffcea08f04ec9146464a",
+      "build_time_s": 0.39298779098317027
+    }
+  },
+  {
+    "path": "20261007-154205-0d26a8d8",
+    "label": "detailed",
+    "repeat": 1,
+    "directory": "solutions/detailed-1",
+    "algorithm_sha256": "7ab37e1e13f9cb59e44b4f73d12ee9365dcde29c2b84d593d3ce820904289c33",
+    "passed": true,
+    "cases": 1664,
+    "sanitizer": "undefined",
+    "public_verification_active_s": 1.4574976660078391,
+    "public_console": "status=0 padded=8 stages=6 network_pairs=24 workers=4\n-7,-3,0,1,1,8,9",
+    "build": {
+      "component_sources": [
+        "SourceFiles/BitonicMethods.c",
+        "SourceFiles/CEcoLab64.c",
+        "SourceFiles/CEcoLab64Factory.c",
+        "SourceFiles/SortFacade.c"
+      ],
+      "library": "/Users/egorbulanov/Documents/GitHub/ARPO_solver_macos/labs/bitonic-64-20261007/solutions/detailed-1/BuildFiles/PublicIndependent/libcomponent.a",
+      "client": "/Users/egorbulanov/Documents/GitHub/ARPO_solver_macos/labs/bitonic-64-20261007/solutions/detailed-1/BuildFiles/PublicIndependent/trusted-client",
+      "architecture": "arm64",
+      "standard": "c89",
+      "sanitizer": "undefined",
+      "sdk_sha256": "75d6d2171f845f356a2c9f445b963217fca0f8c4d741ffcea08f04ec9146464a",
+      "build_time_s": 0.3879550419514999
+    }
+  }
+]

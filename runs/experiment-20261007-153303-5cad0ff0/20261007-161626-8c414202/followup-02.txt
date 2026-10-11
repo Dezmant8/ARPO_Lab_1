@@ -1,0 +1,23 @@
+We will complete the same measured attempt in two small steps. In this step ONLY implement the bitonic STAGE CALLBACK. Keep lab_bitonic_sort as an explicit unimplemented stub returning -1, so the full lab tests are expected to fail. I will verify the callback separately and then ask you to complete lab_bitonic_sort. Do not attempt the complete sort in this response. Return ONE complete C89 source file, under 110 lines, in ONE fenced C block.
+
+The file MUST itself contain this struct definition; it does not exist in any header:
+typedef struct StageContext {
+    uint32_t* indices;
+    const unsigned char* base;
+    uint32_t width;
+    uint32_t count;
+    uint32_t N;
+    uint32_t k;
+    uint32_t j;
+    BitonicCompare compare;
+} StageContext;
+
+Begin with #include "ArpoMethods.h" and no other includes. Define
+static void ECOCALLMETHOD stage_job(void* context, uint32_t lane, uint32_t workers)
+Cast context to StageContext*. Declare ALL locals first, including uint32_t i, partner, left_index, right_index, temporary; and int order. Iterate i from lane to N-1 in steps of workers. Partner is i XOR j. Only process pairs where i < partner. Read left_index from indices[i] and right_index from indices[partner], NOT from i/partner themselves. The indices array changes; the original base never changes during the network.
+
+Compute logical order before swapping. If both indices equal count, order=0. If only left_index equals count, order=1. If only right_index equals count, order=-1. Otherwise use the supplied comparator on base+left_index*width and base+right_index*width. Never call compare for padding. Ascending means (i AND k)==0 and swaps when order>0; descending swaps when order<0. A swap exchanges exactly the TWO indices at i and partner. Do not write the original base, allocate buffers, use libc, or define more helpers in this step.
+
+Also define this exact public ABI so the file links:
+int16_t ECOCALLMETHOD lab_bitonic_sort(IEcoLab64* me, void* base, uint32_t count, uint32_t width, BitonicCompare compare, uint32_t workers, BitonicExecutor executor, void* executor_context, BitonicStats* stats)
+For NOW this function only references its unused parameters and stage_job to avoid unused warnings, then returns -1. No sorting, no allocations, no stats handling in the stub yet. This deliberate partial step is not a finished solution. Keep the exact callback and interface names and every struct field. Output the complete file.

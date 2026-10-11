@@ -1,0 +1,1 @@
+Only one compiler defect remains: the zero/singleton branch must assign the actual BitonicStats member padded_count. Use exactly stats->padded_count = count; in that branch. Keep all other lines of your current source unchanged, including guarded division and the callback. Return the complete current C89 file with only that member access corrected.

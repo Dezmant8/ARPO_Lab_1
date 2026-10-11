@@ -1,0 +1,25 @@
+Produce a concise complete replacement C89 file, including only ArpoMethods.h. Fix the following defects in the stage-context implementation. Do not add indices_copy: it is unused and needlessly adds an allocation. Do not add numbered local variables.
+
+Use the existing exact nine-argument lab_bitonic_sort ABI including stats. Use a StageContext field named N for network length; do not use a padded_count context field. The stats field is named padded_count, spelled exactly that way as a single identifier. There is no field p and no identifier 'p padded_count'. Define the three-argument stage_job callback before the public function.
+
+To remove ambiguity, use this helper DATA LAYOUT exactly. It is not an implementation: you must write both function bodies yourself following the requirements below.
+typedef struct StageContext {
+    uint32_t* indices;
+    const unsigned char* base;
+    uint32_t width;
+    uint32_t count;
+    uint32_t N;
+    uint32_t k;
+    uint32_t j;
+    BitonicCompare compare;
+} StageContext;
+static void ECOCALLMETHOD stage_job(void* context, uint32_t lane, uint32_t workers);
+int16_t ECOCALLMETHOD lab_bitonic_sort(IEcoLab64* me, void* base, uint32_t count, uint32_t width, BitonicCompare compare, uint32_t workers, BitonicExecutor executor, void* executor_context, BitonicStats* stats);
+
+Declare the Eco allocator pointer, both allocated buffers, stage context, counters, and executor status at the beginning of lab_bitonic_sort. Keep this allocator pointer in scope throughout cleanup. Include only ArpoMethods.h. Use int for comparator result, NOT int16_t, since the callback may return any positive or negative int.
+
+The callback MUST handle sentinels BEFORE calling compare: two indices equal to real count compare equal; padding on the left compares greater; padding on the right compares smaller. Call compare only when BOTH indices are real. For each disjoint pair i and (i XOR j) with i < partner, ascending passes exchange if the logical comparison is positive, descending passes exchange if it is negative. Both directions must actually exchange the two indices. Set context.count and every other used field before the first job. Keep original base immutable until the final output commit.
+
+Validation MUST precede ALL empty/singleton shortcuts: me, compare, stats nonnull; width>0; workers between 1 and 16; executor nonnull if workers>1; base nonnull if count>0; count<=1048576; if count>0 then width<=0xFFFFFFFFU/count. Invalid arguments return -1. Then count<=1 sets padded_count=count, stages=0, network_pairs=0 and returns 0 without allocation or executor calls.
+
+For larger input use exactly TWO allocations: N indices, then count*width output bytes after the complete network. Initialize real indices 0..count-1 and padding=count. Traverse k powers 2..N and j=k/2 down to 1. Sequential execution calls stage_job(&context,0,1); parallel execution calls executor(executor_context,stage_job,&context,workers). A nonzero executor result returns -3 after freeing allocated blocks. Count each inner j pass as one stage and add N/2 pairs per pass. After all passes copy each whole original record to output by sorted index using allocator Copy, then Copy output back to base. Free output and indices, NEVER Release the borrowed allocator. Allocation failure returns -2 and never changes input. Success returns 0 and sets all three stats fields. Return complete code, not a discussion.

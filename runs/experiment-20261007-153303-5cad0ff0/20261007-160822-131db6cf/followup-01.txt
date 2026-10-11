@@ -1,0 +1,15 @@
+Rewrite the algorithm FROM SCRATCH as one small complete C89 file including ONLY ArpoMethods.h. The previous failed code is deliberately absent from this active context; its costs are still recorded. Do not copy its structure. In particular, do not declare numbered stage_width variables or hundreds of unused locals. Use meaningful N, k, j, indices and one stage context. Return one complete fenced C block, with every definition present.
+
+The file needs THREE parts, in this order:
+1. One FILE-SCOPE StageContext struct with the original base, element width, real count, padded count N, an index array, the supplied comparator, and current k and j.
+2. One REAL defined callback with this EXACT signature:
+static void ECOCALLMETHOD stage_job(void* context, uint32_t lane, uint32_t workers)
+Its body performs compare/exchange pairs of one bitonic stage. Assign candidate positions to lanes by lane number and stride workers. Partner is i XOR j; process only i < partner so every pair is owned by exactly one lane. Ascending direction means (i AND k)==0. The index value count represents padding and sorts after all real entries. Compare two real indices by calling the comparator on their original records. Never pass padding to the comparator. Swap the two INDICES when their order disagrees with the stage direction. All shared pair writes within one stage must be disjoint.
+3. One REAL definition with this EXACT signature:
+int16_t ECOCALLMETHOD lab_bitonic_sort(IEcoLab64* me, void* base, uint32_t count, uint32_t width, BitonicCompare compare, uint32_t workers, BitonicExecutor executor, void* executor_context, BitonicStats* stats)
+
+Declare ALL locals at the top of EACH function or block, before any statement. Use 0 for null pointers. Validate all required arguments BEFORE count==0 or count==1 shortcuts. Follow every rule in ArpoMethods.h. Reject count*width overflow before multiplying. For count<=1 return success without allocation/jobs and set padded_count=count, other statistics=0.
+
+For larger input, obtain the BORROWED allocator with lab_allocator(me); NEVER Release it. Allocate N uint32 indices, where N is the least power of two >=count. Initialize real indices and padding. An allocation failure returns -2 after cleanup. Run the bitonic network using k=2,4,...,N and, within each k, j=k/2,k/4,...,1. Update the stage context on each inner pass. workers==1 calls stage_job(&context,0,1) directly. workers>1 calls executor(executor_context,stage_job,&context,workers), with ALL FOUR arguments. The executor is synchronous; a nonzero return means cleanup and -3 without changing base. Each inner pass counts one stage and N/2 network pairs.
+
+Only after all stages succeed, allocate count*width output bytes. Use Eco Copy to copy each original record in the sorted index order into output. Copy output back to base only after that buffer is complete. Free every allocated buffer. Set exactly the statistics required by the header and return 0. No libc, pthread, malloc, free, memset, memcpy, qsort or math calls. Do not implement or redeclare ACOM interfaces or change ABI. Keep the file concise and complete.

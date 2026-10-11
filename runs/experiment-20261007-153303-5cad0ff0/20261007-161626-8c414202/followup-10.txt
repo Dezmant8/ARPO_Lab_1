@@ -1,0 +1,70 @@
+Reproduce this verified callback from this same run VERBATIM before your new main. It passed 1022 independent cases.
+#include "ArpoMethods.h"
+
+/* Define the StageContext structure */
+typedef struct {
+    const unsigned char* base;
+    uint32_t width;
+    uint32_t count;
+    uint32_t N;
+    uint32_t k;
+    uint32_t j;
+    BitonicCompare compare;
+    uint32_t* indices;
+} StageContext;
+
+/* Static callback function for stage execution */
+static void ECOCALLMETHOD stage_job(void* context, uint32_t lane, uint32_t workers) {
+    StageContext* ctx = (StageContext*)context;
+    uint32_t i, partner, A, B;
+    int order;
+    int ascending;
+
+    /* Loop through indices in steps of 'workers' */
+    for (i = lane; i < ctx->N; i += workers) {
+        /* Skip if i >= partner */
+        partner = i ^ ctx->j;
+        if (i >= partner) continue;
+
+        /* Get indices */
+        A = ctx->indices[i];
+        B = ctx->indices[partner];
+
+        /* Handle padding */
+        if (A == ctx->count && B == ctx->count) {
+            order = 0;
+        } else if (A == ctx->count) {
+            order = +1;
+        } else if (B == ctx->count) {
+            order = -1;
+        } else {
+            order = ctx->compare(ctx->base + A * ctx->width, ctx->base + B * ctx->width);
+        }
+
+        /* Determine if ascending */
+        ascending = (i & ctx->k) == 0;
+
+        /* Swap indices if necessary */
+        if ((ascending && order > 0) || (!ascending && order < 0)) {
+            uint32_t temp = ctx->indices[i];
+            ctx->indices[i] = ctx->indices[partner];
+            ctx->indices[partner] = temp;
+        }
+    }
+}
+
+/* Public function stub */
+
+The generated stage_job and StageContext now compile and passed 1022 independent callback tests, with one and four workers, arbitrary lengths up to8, both directions of the network, padding, permutation checks and a comparator returning full-range int signs. KEEP THIS CALLBACK AND TYPEDEF EXACTLY UNCHANGED. Replace ONLY the unimplemented lab_bitonic_sort stub with the complete public function. Return the entire file including the unchanged callback and typedef, in ONE C89 fenced block. Do not omit any definitions or add includes beyond ArpoMethods.h.
+
+Declare all locals at the function start: one IEcoMemoryAllocator1 pointer, one StageContext, N/i/k/j/stages counters, a uint64_t pairs counter, one uint32_t* indices buffer, one void* output buffer, and executor status. Initialize buffer pointers to0. Do not use variables outside their scope or Release the borrowed allocator.
+
+Validate BEFORE early returns: me/compare/stats nonnull; width>0; workers1..16; executor required for workers>1; base required for count>0; count<=1048576; count>0 requires width<=0xFFFFFFFFU/count. Invalid returns-1. Then count<=1 sets stats.padded_count=count, stats.stages=0, stats.network_pairs=0 and returns0 without allocations/jobs.
+
+For larger input compute N as the least power of two >=count. Obtain lab_allocator(me), allocate N uint32 indices through its Alloc, return-2 on failure. Initialize indices[i]=i for i<count and indices[i]=count for remaining positions. Initialize EVERY StageContext field: indices, base, width, count, N, compare. Start stages/pairs at0.
+
+Use nested k=2,4,...,N and j=k/2,...,1 loops. Set context.k=k and context.j=j each pass. For workers==1 call stage_job(&context,0,1). Otherwise call executor(executor_context,stage_job,&context,workers) with all four arguments. Nonzero executor status frees indices and returns-3 without modifying base. Count every inner pass as one stage and add N/2 to pairs.
+
+After the network succeeds allocate count*width output bytes through the same allocator. Failure frees indices and returns-2. Copy each WHOLE original record at indices[i] into output at position i using allocator Copy. Its arguments are allocator, destination, source, byte count. Use byte pointer arithmetic; width is an integer, never dereference it. Copy the complete output buffer back to base using Eco Copy. Free output and indices through Eco Free. Set stats.padded_count=N, stages and network_pairs to the computed values and return0. Never call libc, malloc, free, memcpy, memset, qsort or pthread inside this source. Preserve input on every failure. Keep all three function/struct definitions present and use the exact nine-argument public ABI from ArpoMethods.h.
+
+Use allocator->pVTbl->Alloc/Free/Copy. Set context.compare=compare. Declare all locals at main start, including StageContext. Use (unsigned char*)base for byte offsets passed to Eco Copy, to match its void* source signature. Guard overflow division by count>0. Include the entire unchanged callback and complete main.

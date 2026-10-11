@@ -1,0 +1,4 @@
+Fix these concrete defects in your current file and return the WHOLE source, preserving the already correct network and buffer logic.
+The allocator type is malformed: IE ecoMemoryAllocator1 is invalid. It must be exactly IEcoMemoryAllocator1* allocator;.
+Before count<=1 success: reject count>1048576; reject count>0 && base==NULL; replace the unguarded overflow line with if(count>0 && width>0xFFFFFFFFU/count) return -1;. Preserve the separate unconditional width==0 rejection. NEVER divide by count==0. Preserve me/compare/stats, worker and executor checks.
+Declare pairs separately as uint64_t rather than grouping it with uint32_t counters. Do not remove any checks or StageContext fields. Keep your callback, both swap directions, pVTbl memory calls, byte-offset output materialization and cleanup unchanged. No extra includes.

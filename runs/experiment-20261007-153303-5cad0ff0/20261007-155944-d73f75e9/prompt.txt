@@ -1,0 +1,1 @@
+Implement generic parallel Bitonic sort for lab_bitonic_sort declared in ArpoMethods.h. Use ANSI C89, Eco allocation and no libc. Return the complete BitonicMethods.c only.

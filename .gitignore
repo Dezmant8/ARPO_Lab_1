@@ -1,0 +1,6 @@
+.eco/
+**/.sdk/
+**/BuildFiles/
+**/__pycache__/
+*.pyc
+.DS_Store

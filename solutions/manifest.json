@@ -1,0 +1,16 @@
+[
+  {
+    "path": "20261007-153309-3b5aa46a",
+    "label": "short",
+    "repeat": 1,
+    "directory": "solutions/short-1",
+    "algorithm_sha256": "ddcdce83a38113b93bd78729c2e1b57ecbc443babb2aa7bf63f6e3d4f2380a63"
+  },
+  {
+    "path": "20261007-154205-0d26a8d8",
+    "label": "detailed",
+    "repeat": 1,
+    "directory": "solutions/detailed-1",
+    "algorithm_sha256": "7ab37e1e13f9cb59e44b4f73d12ee9365dcde29c2b84d593d3ce820904289c33"
+  }
+]

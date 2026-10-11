@@ -1,0 +1,10 @@
+{
+  "cpu": "Apple M4 Pro",
+  "logical_cpus": 14,
+  "ram_bytes": 51539607552,
+  "macos": "27.0",
+  "build": "26A428",
+  "architecture": "arm64",
+  "measurement_date": "2026-10-07",
+  "timezone": "Europe/Moscow"
+}

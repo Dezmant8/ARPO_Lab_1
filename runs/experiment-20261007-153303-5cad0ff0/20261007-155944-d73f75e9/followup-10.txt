@@ -1,0 +1,6 @@
+Your current file is close. Fix these concrete defects only, preserving the callback comparison and swap logic:
+1. StageContext is missing uint32_t j; add it alongside k, keep all other fields.
+2. Declare void* output and int16_t executor_status at the START of lab_bitonic_sort. Later assign them without redeclaration, to satisfy C89.
+3. After all parameter checks, count<=1 must return0 without allocation. Set padded_count=count, stages=0, network_pairs=0; validate base if count>0 before this branch.
+4. The output copy call currently casts an INDEX to a pointer. Destination must be (unsigned char*)output + i*width. Source must be (unsigned char*)base + context.indices[i]*width. Both are byte addresses. Copy one width per record. Never omit base or the destination offset.
+Keep the safe count>0 multiplication guard, uint64_t pairs, original nine-argument ABI, allocator pVTbl calls, complete second-buffer materialization and Free calls. Return the WHOLE existing file with these corrections, no redesign.

@@ -1,0 +1,43 @@
+{
+  "timing": "CLOCK_MONOTONIC wall seconds",
+  "compiler": "clang -O2 -std=c89",
+  "sanitizer": false,
+  "warmups_per_input_method": 1,
+  "samples_per_input_method": 7,
+  "pool_workers_created_outside_timing": 8,
+  "workers_for_parallel_sort": 4,
+  "excluded": "input reset, reference sorting, pool creation, final verification",
+  "included": "internal Eco allocations/copies/frees and all stage synchronization",
+  "interface": "IEcoSortAndSearch Sort with four qsort-compatible arguments; Configure and QueryInterface included",
+  "patterns": [
+    "random",
+    "sorted",
+    "reverse",
+    "equal"
+  ],
+  "sizes": [
+    1024,
+    8192,
+    65536,
+    262144
+  ],
+  "runs": 3,
+  "omitted_unsuccessful_runs": [
+    {
+      "run_id": "20261007-155038-843acf04",
+      "label": "detailed",
+      "status": "budget_exhausted"
+    },
+    {
+      "run_id": "20261007-160822-131db6cf",
+      "label": "short",
+      "status": "budget_exhausted"
+    },
+    {
+      "run_id": "20261007-161626-8c414202",
+      "label": "detailed",
+      "status": "budget_exhausted"
+    }
+  ],
+  "all_outputs_match_qsort": true
+}

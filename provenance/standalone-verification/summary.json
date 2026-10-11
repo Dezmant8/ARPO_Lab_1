@@ -1,0 +1,22 @@
+{
+  "checked_at": "2026-10-11T20:29:43.348824+00:00",
+  "source_files_unchanged": true,
+  "attached_report_unchanged": true,
+  "sdk_archive_sha256": "2f23fffb9e81d4e5423153e2ff7236578ae5e947501a1e5c4168d3dc2b3c08b3",
+  "sdk_tree_sha256": "75d6d2171f845f356a2c9f445b963217fca0f8c4d741ffcea08f04ec9146464a",
+  "short": {
+    "console_exit_code": 0,
+    "cases": 1664,
+    "failures": 0,
+    "sanitizer": "undefined"
+  },
+  "detailed": {
+    "console_exit_code": 0,
+    "cases": 1664,
+    "failures": 0,
+    "sanitizer": "undefined"
+  },
+  "exported_experiment_requests": 137,
+  "exported_experiment_tokens": 1852802,
+  "note": "Verification of the portable copy; original experiment measurements were not changed."
+}

@@ -1,0 +1,1 @@
+UBSan reports division by zero for count==0 in argument validation. Change ONLY the overflow guard so division 0xFFFFFFFFU/count is evaluated only if count>0. Keep width==0 rejected even when count==0. Preserve the entire rest of your current source including the working callback and materialization. Return the complete file.
