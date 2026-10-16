@@ -20,6 +20,14 @@ ROOT = Path(__file__).resolve().parent.parent
 ARCHIVE_SHA256 = "2f23fffb9e81d4e5423153e2ff7236578ae5e947501a1e5c4168d3dc2b3c08b3"
 SDK_SHA256 = "75d6d2171f845f356a2c9f445b963217fca0f8c4d741ffcea08f04ec9146464a"
 VARIANTS = {"short": "short-1", "detailed": "detailed-1"}
+COM_CASES = [
+    "matrix", "ownership", "secondary_lifetime", "null_iid_output",
+    "factory_null_output", "factory_null_iid", "factory_null_me", "factory_refcount",
+    "aggregation", "alloc_null_system", "alloc_null_iid", "alloc_null_output",
+    "alloc_null_me", "system_failure", "bus_failure", "memory_failure",
+    "allocation_failure", "second_bus_query_failure", "second_memory_query_failure",
+    "optional_extension_absent", "manager_identifier_lifetime",
+]
 
 
 def save_json(path, data):
@@ -73,27 +81,54 @@ def setup(archive):
     print("Eco SDK prepared:", sdk)
 
 
+def run_com_cases(binary, output, stream):
+    records = []
+    checks = 0
+    for case in COM_CASES:
+        env = {**os.environ, "ARPO_COM_CASE": case}
+        result = subprocess.run([binary], capture_output=True, text=True, timeout=30, env=env)
+        log = result.stdout + result.stderr
+        stream.write(log)
+        (output / (case + ".log")).write_text(log, encoding="utf-8")
+        summary = next((line for line in result.stdout.splitlines() if line.startswith("COM_SUMMARY,")), "")
+        passed = result.returncode == 0 and ",failures=0," in summary
+        if passed:
+            checks += int(summary.split(",checks=", 1)[1].split(",", 1)[0])
+        records.append({"case": case, "passed": passed, "returncode": result.returncode,
+                        "summary": summary})
+    save_json(output / "checks.json", {"cases": records, "checks": checks,
+                                      "passed": all(row["passed"] for row in records)})
+    if not all(row["passed"] for row in records):
+        raise RuntimeError("COM contract checks failed; see checks.json")
+    return subprocess.CompletedProcess([binary], 0,
+        "COM contract: " + str(len(records)) + " scenarios, " + str(checks) + " checks passed\n", "")
+
+
 def execute(command, variant, framework):
     project = ROOT / "solutions" / VARIANTS[variant]
     output = project / "BuildFiles" / "Standalone" / command
     output.mkdir(parents=True, exist_ok=True)
     log = output / "output.log"
-    client = None if command == "demo" else ROOT / "checks/reference-public.c"
+    client = None if command == "demo" else ROOT / (
+        "checks/com-contract.c" if command == "com-test" else "checks/reference-public.c")
     try:
         with log.open("w", encoding="utf-8") as stream:
             with contextlib.redirect_stdout(stream), contextlib.redirect_stderr(stream):
                 record = build(
-                    project, framework, client=client, sanitize=command == "test",
+                    project, framework, client=client, sanitize=command in {"test", "com-test"},
                     output=str(output.relative_to(project)), sdk_sha256=SDK_SHA256,
                 )
                 env = dict(os.environ)
                 env.pop("ARPO_BITONIC_BENCH", None)
                 if command == "benchmark":
                     env["ARPO_BITONIC_BENCH"] = "1"
-                result = subprocess.run(
-                    [record["client"]], capture_output=True, text=True,
-                    timeout=600 if command == "benchmark" else 180, env=env,
-                )
+                if command == "com-test":
+                    result = run_com_cases(record["client"], output, stream)
+                else:
+                    result = subprocess.run(
+                        [record["client"]], capture_output=True, text=True,
+                        timeout=600 if command == "benchmark" else 180, env=env,
+                    )
                 stream.write(result.stdout + result.stderr)
         if result.returncode:
             raise RuntimeError("Client failed, exit code " + str(result.returncode))
@@ -112,6 +147,8 @@ def execute(command, variant, framework):
             print(result.stdout, end="")
         elif command == "test":
             print("SUMMARY,cases=1664,failures=0 (UBSan)")
+        elif command == "com-test":
+            print(result.stdout, end="")
     except Exception:
         print("Diagnostic log:", log, file=sys.stderr)
         raise
@@ -119,7 +156,7 @@ def execute(command, variant, framework):
 
 def main():
     parser = argparse.ArgumentParser(description="Standalone Eco Lab 64: setup, demo, tests, benchmark")
-    parser.add_argument("command", choices=["setup", "demo", "test", "benchmark"])
+    parser.add_argument("command", choices=["setup", "demo", "test", "com-test", "benchmark"])
     parser.add_argument("--variant", choices=["short", "detailed", "all"], default="all")
     parser.add_argument("--framework", type=Path, default=ROOT / ".eco/Eco.Framework")
     parser.add_argument("--archive", type=Path,
@@ -136,6 +173,8 @@ def main():
                 raise ValueError("Run python3 scripts/lab.py setup first, or specify --framework")
             for variant in VARIANTS if args.variant == "all" else [args.variant]:
                 execute(args.command, variant, sdk)
+                if args.command == "test":
+                    execute("com-test", variant, sdk)
         return 0
     except (OSError, ValueError, RuntimeError, subprocess.SubprocessError) as exc:
         print("Lab error:", exc, file=sys.stderr)

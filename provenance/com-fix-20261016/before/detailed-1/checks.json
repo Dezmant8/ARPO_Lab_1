@@ -1,0 +1,107 @@
+[
+  {
+    "case": "matrix",
+    "returncode": 1,
+    "passed": false
+  },
+  {
+    "case": "ownership",
+    "returncode": 1,
+    "passed": false
+  },
+  {
+    "case": "secondary_lifetime",
+    "returncode": 1,
+    "passed": false
+  },
+  {
+    "case": "null_iid_output",
+    "returncode": 1,
+    "passed": false
+  },
+  {
+    "case": "factory_null_output",
+    "returncode": -11,
+    "passed": false
+  },
+  {
+    "case": "factory_null_iid",
+    "returncode": -11,
+    "passed": false
+  },
+  {
+    "case": "factory_null_me",
+    "returncode": -11,
+    "passed": false
+  },
+  {
+    "case": "factory_refcount",
+    "returncode": 1,
+    "passed": false
+  },
+  {
+    "case": "aggregation",
+    "returncode": 1,
+    "passed": false
+  },
+  {
+    "case": "alloc_null_system",
+    "returncode": 1,
+    "passed": false
+  },
+  {
+    "case": "alloc_null_iid",
+    "returncode": 1,
+    "passed": false
+  },
+  {
+    "case": "alloc_null_output",
+    "returncode": 1,
+    "passed": false
+  },
+  {
+    "case": "alloc_null_me",
+    "returncode": 1,
+    "passed": false
+  },
+  {
+    "case": "system_failure",
+    "returncode": 1,
+    "passed": false
+  },
+  {
+    "case": "bus_failure",
+    "returncode": 1,
+    "passed": false
+  },
+  {
+    "case": "memory_failure",
+    "returncode": 1,
+    "passed": false
+  },
+  {
+    "case": "allocation_failure",
+    "returncode": 1,
+    "passed": false
+  },
+  {
+    "case": "second_bus_query_failure",
+    "returncode": -11,
+    "passed": false
+  },
+  {
+    "case": "second_memory_query_failure",
+    "returncode": -11,
+    "passed": false
+  },
+  {
+    "case": "optional_extension_absent",
+    "returncode": 1,
+    "passed": false
+  },
+  {
+    "case": "manager_identifier_lifetime",
+    "returncode": 1,
+    "passed": false
+  }
+]

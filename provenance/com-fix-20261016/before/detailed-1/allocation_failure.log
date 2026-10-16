@@ -1,0 +1,5 @@
+COM_CASE,allocation_failure
+CREATE_RESULT,status=-24,system_queries=1,bus_queries=1,memory_queries=1,allocations=1
+FAIL,failed_creation_returns_error_and_null
+FAIL,allocator_references_balanced
+COM_SUMMARY,case=allocation_failure,checks=4,failures=2,refs=1,memory_refs=2,live=0

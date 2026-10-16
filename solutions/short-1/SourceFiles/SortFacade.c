@@ -8,7 +8,9 @@ static CEcoLab64_97DD0B7B* owner(IEcoSortAndSearch* me) {
 }
 static int16_t ECOCALLMETHOD sort_query(IEcoSortAndSearch* me,const UGUID* iid,void** out) {
     CEcoLab64_97DD0B7B* obj=owner(me);
-    if(!obj || !iid || !out) return -1;
+    if(!out) return ERR_ECO_POINTER;
+    *out=0;
+    if(!obj || !iid) return ERR_ECO_POINTER;
     return obj->m_pVTblIEcoLab64->QueryInterface((IEcoLab64*)obj,iid,out);
 }
 static uint32_t ECOCALLMETHOD sort_addref(IEcoSortAndSearch* me) {
@@ -45,6 +47,16 @@ static int16_t ECOCALLMETHOD sort_result(IEcoSortAndSearch* me,BitonicStats* sta
     *stats=obj->m_last_stats;
     return obj->m_last_status;
 }
-IEcoSortAndSearchVTbl g_sort_vtable = {
+static IEcoSortAndSearchVTbl g_sort_vtable = {
     sort_query,sort_addref,sort_release,sort_call,sort_configure,sort_result
 };
+void initialize_sort_interface(CEcoLab64_97DD0B7B* object) {
+    object->m_pVTblSort=&g_sort_vtable;
+    object->m_workers=1;
+    object->m_executor=0;
+    object->m_executor_context=0;
+    object->m_last_status=0;
+    object->m_last_stats.padded_count=0;
+    object->m_last_stats.stages=0;
+    object->m_last_stats.network_pairs=0;
+}

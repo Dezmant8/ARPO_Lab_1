@@ -1,265 +1,104 @@
+/* Common ACOM object implementation; the measured algorithm is unchanged. */
 #include "ArpoMethods.h"
-/*
- * <character encoding>
- *   Cyrillic (UTF-8 with signature) - Codepage 65001
- * </character encoding>
- *
- * <summary>
- *   CEcoLab64_97DD0B7B
- * </summary>
- *
- * <description>
- *   This source code describes the implementation of the interfaces for CEcoLab64_97DD0B7B
- * </description>
- *
- * <author>
- *   Copyright (c) 2026 . All rights reserved.
- * </author>
- *
- */
-
-
-#include "IEcoSystem1.h"
+#include "CEcoLab64.h"
 #include "IEcoInterfaceBus1.h"
 #include "IEcoInterfaceBus1MemExt.h"
-#include "CEcoLab64.h"
-/*
- *
- * <summary>
- *   QueryInterface Function
- * </summary>
- *
- * <description>
- *   QueryInterface function for the IEcoLab64 interface
- * </description>
- *
- */
-static int16_t ECOCALLMETHOD CEcoLab64_97DD0B7B_QueryInterface(/* in */ IEcoLab64Ptr_t me, /* in */ const UGUID* riid, /* out */ void** ppv) {
-    CEcoLab64_97DD0B7B* pCMe = (CEcoLab64_97DD0B7B*)me;
 
-    /* Pointer Validation */
-    if (me == 0 || ppv == 0 || riid == 0) {
-        return ERR_ECO_POINTER;
-    }
-
-    /* Validate and retrieve requested interface */
-    if ( IsEqualUGUID(riid, &IID_IEcoLab64) ) {
-        *ppv = &pCMe->m_pVTblIEcoLab64;
-        pCMe->m_pVTblIEcoLab64->AddRef((IEcoLab64*)pCMe);
-    }
-	
-    else if ( IsEqualUGUID(riid, &IID_IEcoSortAndSearch) ) {
-        *ppv = &pCMe->m_pVTblSort;
-        pCMe->m_pVTblIEcoLab64->AddRef((IEcoLab64*)pCMe);
-    }
-    else if ( IsEqualUGUID(riid, &IID_IEcoUnknown) ) {
-        *ppv = &pCMe->m_pVTblIEcoLab64;
-        pCMe->m_pVTblIEcoLab64->AddRef((IEcoLab64*)pCMe);
-    }
-    else {
-        *ppv = 0;
-        return ERR_ECO_NOINTERFACE;
-    }
+static int16_t ECOCALLMETHOD lab_query(IEcoLab64* me, const UGUID* iid, void** out) {
+    CEcoLab64_97DD0B7B* object = (CEcoLab64_97DD0B7B*)me;
+    if (!out) return ERR_ECO_POINTER;
+    *out = 0;
+    if (!me || !iid) return ERR_ECO_POINTER;
+    if (IsEqualUGUID(iid, &IID_IEcoLab64) || IsEqualUGUID(iid, &IID_IEcoUnknown))
+        *out = &object->m_pVTblIEcoLab64;
+    else if (IsEqualUGUID(iid, &IID_IEcoSortAndSearch))
+        *out = &object->m_pVTblSort;
+    else return ERR_ECO_NOINTERFACE;
+    object->m_pVTblIEcoLab64->AddRef(me);
     return ERR_ECO_SUCCESS;
 }
-
-/*
- *
- * <summary>
- *   AddRef Function
- * </summary>
- *
- * <description>
- *   AddRef function for the IEcoLab64 interface
- * </description>
- *
- */
-static uint32_t ECOCALLMETHOD CEcoLab64_97DD0B7B_AddRef(/* in */ IEcoLab64Ptr_t me) {
-    CEcoLab64_97DD0B7B* pCMe = (CEcoLab64_97DD0B7B*)me;
-
-    /* Pointer Validation */
-    if (me == 0 ) {
-        return -1; /* ERR_ECO_POINTER */
-    }
-
-    return ++pCMe->m_cRef;
+static uint32_t ECOCALLMETHOD lab_addref(IEcoLab64* me) {
+    CEcoLab64_97DD0B7B* object = (CEcoLab64_97DD0B7B*)me;
+    if (!object) return 0;
+    return ++object->m_cRef;
 }
-
-/*
- *
- * <summary>
- *   Release Function
- * </summary>
- *
- * <description>
- *   Release function for the IEcoLab64 interface
- * </description>
- *
- */
-static uint32_t ECOCALLMETHOD CEcoLab64_97DD0B7B_Release(/* in */ IEcoLab64Ptr_t me) {
-    CEcoLab64_97DD0B7B* pCMe = (CEcoLab64_97DD0B7B*)me;
-
-    /* Pointer Validation */
-    if (me == 0 ) {
-        return -1; /* ERR_ECO_POINTER */
-    }
-
-    /* Decrementing the component's reference count */
-    --pCMe->m_cRef;
-    /* If the count is zero, free the instance data */
-    if ( pCMe->m_cRef == 0 ) {
-        pCMe->Delete(pCMe);
-		
-        return 0;
-    }
-    return pCMe->m_cRef;
+static uint32_t ECOCALLMETHOD lab_release(IEcoLab64* me) {
+    CEcoLab64_97DD0B7B* object = (CEcoLab64_97DD0B7B*)me;
+    IEcoMemoryAllocator1* memory;
+    IEcoSystem1* system;
+    uint32_t refs;
+    if (!object || !object->m_cRef) return 0;
+    refs = --object->m_cRef;
+    if (refs) return refs;
+    memory = object->m_pIMem;
+    system = object->m_pISys;
+    memory->pVTbl->Free(memory, object);
+    system->pVTbl->Release(system);
+    memory->pVTbl->Release(memory);
+    return 0;
 }
+static IEcoLab64VTbl g_lab_vtable = {
+    lab_query, lab_addref, lab_release, lab_bitonic_sort
+};
 
-/*
- *
- * <summary>
- *   MyFunction Function
- * </summary>
- *
- * <description>
- *   Function
- * </description>
- *
- */
+int16_t ECOCALLMETHOD createCEcoLab64_97DD0B7B(IEcoUnknown* system,
+        IEcoUnknown* outer, const UGUID* iid, void** out) {
+    IEcoSystem1* sys = 0;
+    IEcoInterfaceBus1* bus = 0;
+    IEcoInterfaceBus1MemExt* extension = 0;
+    IEcoMemoryAllocator1* memory = 0;
+    CEcoLab64_97DD0B7B* object = 0;
+    const UGUID* selected;
+    UGUID manager = CID_EcoMemoryManager1;
+    int16_t result;
+    if (!out) return ERR_ECO_POINTER;
+    *out = 0;
+    if (!system || !iid) return ERR_ECO_POINTER;
+    /* No delegating/nondelegating IUnknown: reject all aggregation. */
+    if (outer) return ERR_ECO_NOAGGREGATION;
+    if (!IsEqualUGUID(iid, &IID_IEcoLab64) && !IsEqualUGUID(iid, &IID_IEcoUnknown)
+            && !IsEqualUGUID(iid, &IID_IEcoSortAndSearch)) return ERR_ECO_NOINTERFACE;
 
-
-
-
-
-/*
- *
- * <summary>
- *   Init Function
- * </summary>
- *
- * <description>
- *   Instance initialization function
- * </description>
- *
- */
-static int16_t ECOCALLMETHOD initCEcoLab64_97DD0B7B(/*in*/ CEcoLab64_97DD0B7BPtr_t me, /* in */ IEcoUnknownPtr_t pIUnkSystem) {
-    CEcoLab64_97DD0B7B* pCMe = (CEcoLab64_97DD0B7B*)me;
-    IEcoInterfaceBus1* pIBus = 0;
-
-    IEcoInterfaceBus1MemExt* pIMemExt = 0;
-    int16_t result = ERR_ECO_POINTER;
-    UGUID* rcid = (UGUID*)&CID_EcoMemoryManager1;	
-
-    /* Pointer Validation */
-    if (me == 0 ) {
-        return result;
+    result = system->pVTbl->QueryInterface(system, &GID_IEcoSystem, (void**)&sys);
+    if (result != 0 || !sys) { result = ERR_ECO_NOSYSTEM; goto cleanup; }
+    result = sys->pVTbl->QueryInterface(sys, &IID_IEcoInterfaceBus1, (void**)&bus);
+    if (result != 0 || !bus) { result = ERR_ECO_NOBUS; goto cleanup; }
+    result = bus->pVTbl->QueryInterface(bus, &IID_IEcoInterfaceBus1MemExt, (void**)&extension);
+    if (result == 0 && extension) {
+        selected = extension->pVTbl->get_Manager(extension);
+        if (!selected) { result = ERR_ECO_GET_MEMORY_ALLOCATOR; goto cleanup; }
+        /* Copy the identifier before releasing its owner. */
+        manager = *selected;
+        extension->pVTbl->Release(extension);
+        extension = 0;
     }
-
-    /* Storing the pointer to the system interface */
-    pCMe->m_pISys = (IEcoSystem1*)pIUnkSystem;
-
-    /* Getting the interface for working with the interface bus */
-    result = pCMe->m_pISys->pVTbl->QueryInterface(pCMe->m_pISys, &IID_IEcoInterfaceBus1, (void **)&pIBus);
-
-    /* Getting the component ID for working with memory */
-    result = pIBus->pVTbl->QueryInterface(pIBus, &IID_IEcoInterfaceBus1MemExt, (void**)&pIMemExt);
-    if (result == 0 && pIMemExt != 0) {
-        rcid = (UGUID*)pIMemExt->pVTbl->get_Manager(pIMemExt);
-        pIMemExt->pVTbl->Release(pIMemExt);
+    else if (result != ERR_ECO_NOINTERFACE) {
+        if (result == 0) result = ERR_ECO_GET_MEMORY_ALLOCATOR;
+        goto cleanup;
     }
+    result = bus->pVTbl->QueryComponent(bus, &manager, 0,
+        &IID_IEcoMemoryAllocator1, (void**)&memory);
+    if (result != 0 || !memory) { result = ERR_ECO_GET_MEMORY_ALLOCATOR; goto cleanup; }
+    object = (CEcoLab64_97DD0B7B*)memory->pVTbl->Alloc(memory, sizeof(CEcoLab64_97DD0B7B));
+    if (!object) { result = ERR_ECO_OUTOFMEMORY; goto cleanup; }
 
-    /* Getting the memory allocator interface */
-    result = pIBus->pVTbl->QueryComponent(pIBus, rcid, 0, &IID_IEcoMemoryAllocator1, (void**) &pCMe->m_pIMem);
-    /* Check */
-    if (result != 0 || pCMe->m_pIMem == 0) {
-        result = ERR_ECO_GET_MEMORY_ALLOCATOR;
-    }
+    object->m_pVTblIEcoLab64 = &g_lab_vtable;
+    object->m_cRef = 1;
+    /* Transfer the two acquired references to the new instance. */
+    object->m_pIMem = memory; memory = 0;
+    object->m_pISys = sys; sys = 0;
+    initialize_sort_interface(object);
+    result = lab_query((IEcoLab64*)object, iid, out);
+    lab_release((IEcoLab64*)object);
 
-
-
-    /* Freeing */
-    pIBus->pVTbl->Release(pIBus);
-
+cleanup:
+    if (extension) extension->pVTbl->Release(extension);
+    if (bus) bus->pVTbl->Release(bus);
+    if (memory) memory->pVTbl->Release(memory);
+    if (sys) sys->pVTbl->Release(sys);
     return result;
 }
-
-/*
- *
- * <summary>
- *   Create Function
- * </summary>
- *
- * <description>
- *   Instance creation function
- * </description>
- *
- */
-static int16_t ECOCALLMETHOD createCEcoLab64_97DD0B7B(/* in */ CEcoLab64_97DD0B7BPtr_t pCMe, /* in */ IEcoUnknownPtr_t pIUnkSystem, /* in */ IEcoUnknownPtr_t pIUnkOuter) {
-    int16_t result = ERR_ECO_POINTER;
-
-    /* Pointer Validation */
-    if (pCMe == 0) {
-        return result; /* ERR_ECO_POINTER */
-    }
-
-
-
-    return ERR_ECO_SUCCESS;
-}
-
-/*
- *
- * <summary>
- *   Delete Function
- * </summary>
- *
- * <description>
- *   Instance freeing function
- * </description>
- *
- */
-static void ECOCALLMETHOD deleteCEcoLab64_97DD0B7B(/* in */ CEcoLab64_97DD0B7BPtr_t pCMe) {
-    IEcoMemoryAllocator1* pIMem = 0;
-
-    if (pCMe != 0 ) {
-        pIMem = pCMe->m_pIMem;
-        /* Freeing */
-        if ( pCMe->m_Name != 0 ) {
-            pIMem->pVTbl->Free(pIMem, pCMe->m_Name);
-        }
-        if ( pCMe->m_pISys != 0 ) {
-            pCMe->m_pISys->pVTbl->Release(pCMe->m_pISys);
-        }
-        pIMem->pVTbl->Free(pIMem, pCMe);
-        pIMem->pVTbl->Release(pIMem);
-    }
-}
-
-/* IEcoLab64 Virtual Table */
-IEcoLab64VTbl g_x63D20705ABDB4E2B861802C857FD994DVTbl_97DD0B7B = {
-    CEcoLab64_97DD0B7B_QueryInterface,
-    CEcoLab64_97DD0B7B_AddRef,
-    CEcoLab64_97DD0B7B_Release,
-    lab_bitonic_sort
-};
-
-
-
-/* Object Instance */
-CEcoLab64_97DD0B7B g_xCEcoLab64_97DD0B7B = {
-    &g_x63D20705ABDB4E2B861802C857FD994DVTbl_97DD0B7B,
-   
-    initCEcoLab64_97DD0B7B,
-    createCEcoLab64_97DD0B7B,
-    deleteCEcoLab64_97DD0B7B,
-    1, /* m_cRef */
-    0, /* m_pISys */
-    0, /* m_pISys */
-    0, /* m_Name */
-    &g_sort_vtable, 1, 0, 0, 0, {0,0,0}
-};
-
 IEcoMemoryAllocator1* ECOCALLMETHOD lab_allocator(IEcoLab64* me) {
-    if (me == 0) return 0;
+    if (!me) return 0;
     return ((CEcoLab64_97DD0B7B*)me)->m_pIMem;
 }

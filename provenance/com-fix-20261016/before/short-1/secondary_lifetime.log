@@ -1,0 +1,5 @@
+COM_CASE,secondary_lifetime
+CREATE_RESULT,status=0,system_queries=1,bus_queries=2,memory_queries=2,allocations=1
+FAIL,system_and_bus_references_balanced
+FAIL,allocator_references_balanced
+COM_SUMMARY,case=secondary_lifetime,checks=7,failures=2,refs=2,memory_refs=2,live=0

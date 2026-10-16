@@ -1,0 +1,2 @@
+COM_CASE,factory_null_output
+COM_SUMMARY,case=factory_null_output,checks=4,failures=0,refs=1,memory_refs=1,live=0

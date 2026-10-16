@@ -1,0 +1,3 @@
+COM_CASE,alloc_null_me
+FAIL,failed_allocation_output_cleared
+COM_SUMMARY,case=alloc_null_me,checks=5,failures=1,refs=1,memory_refs=1,live=0

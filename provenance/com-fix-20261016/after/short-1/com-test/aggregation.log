@@ -1,0 +1,2 @@
+COM_CASE,aggregation
+COM_SUMMARY,case=aggregation,checks=4,failures=0,refs=1,memory_refs=1,live=0

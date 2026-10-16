@@ -1,0 +1,7 @@
+COM_CASE,null_iid_output
+CREATE_RESULT,status=0,system_queries=1,bus_queries=2,memory_queries=2,allocations=1
+FAIL,base_null_iid_clears_output
+FAIL,secondary_null_iid_clears_output
+FAIL,system_and_bus_references_balanced
+FAIL,allocator_references_balanced
+COM_SUMMARY,case=null_iid_output,checks=7,failures=4,refs=2,memory_refs=2,live=0

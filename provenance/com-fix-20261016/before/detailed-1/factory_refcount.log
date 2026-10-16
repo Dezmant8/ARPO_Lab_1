@@ -1,0 +1,3 @@
+COM_CASE,factory_refcount
+FAIL,factory_refcount_does_not_underflow
+COM_SUMMARY,case=factory_refcount,checks=6,failures=1,refs=1,memory_refs=1,live=0

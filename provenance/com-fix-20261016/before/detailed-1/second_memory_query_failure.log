@@ -1,0 +1,2 @@
+COM_CASE,second_memory_query_failure
+CREATE_RESULT,status=0,system_queries=1,bus_queries=2,memory_queries=2,allocations=1

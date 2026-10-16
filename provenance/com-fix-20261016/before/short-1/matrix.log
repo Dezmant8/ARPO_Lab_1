@@ -1,0 +1,5 @@
+COM_CASE,matrix
+CREATE_RESULT,status=0,system_queries=1,bus_queries=2,memory_queries=2,allocations=1
+FAIL,system_and_bus_references_balanced
+FAIL,allocator_references_balanced
+COM_SUMMARY,case=matrix,checks=50,failures=2,refs=2,memory_refs=2,live=0

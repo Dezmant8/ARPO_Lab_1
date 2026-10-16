@@ -1,0 +1,2 @@
+COM_CASE,factory_refcount
+COM_SUMMARY,case=factory_refcount,checks=6,failures=0,refs=1,memory_refs=1,live=0

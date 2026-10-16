@@ -1,0 +1,8 @@
+COM_CASE,ownership
+CREATE_RESULT,status=0,system_queries=1,bus_queries=2,memory_queries=2,allocations=1
+FAIL,system_pointer_obtained_via_queryinterface
+FAIL,exactly_one_owned_system_reference
+FAIL,exactly_one_owned_allocator_reference
+FAIL,system_and_bus_references_balanced
+FAIL,allocator_references_balanced
+COM_SUMMARY,case=ownership,checks=7,failures=5,refs=2,memory_refs=2,live=0

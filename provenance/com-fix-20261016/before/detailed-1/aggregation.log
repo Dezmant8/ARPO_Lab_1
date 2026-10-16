@@ -1,0 +1,6 @@
+COM_CASE,aggregation
+FAIL,unsupported_aggregation_rejected_even_for_unknown
+FAIL,accepted_aggregation_must_delegate_unknown_to_outer
+FAIL,system_and_bus_references_balanced
+FAIL,allocator_references_balanced
+COM_SUMMARY,case=aggregation,checks=5,failures=4,refs=2,memory_refs=2,live=0

@@ -1,0 +1,1 @@
+fdff7f8c7d8cd2bae7062399dcaad8c6276e3822e343f06cd402fcf9fd2a0b84  checks/com-contract.c

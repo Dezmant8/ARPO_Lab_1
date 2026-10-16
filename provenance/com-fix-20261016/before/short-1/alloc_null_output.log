@@ -1,0 +1,4 @@
+COM_CASE,alloc_null_output
+FAIL,system_and_bus_references_balanced
+FAIL,allocator_references_balanced
+COM_SUMMARY,case=alloc_null_output,checks=4,failures=2,refs=2,memory_refs=2,live=0

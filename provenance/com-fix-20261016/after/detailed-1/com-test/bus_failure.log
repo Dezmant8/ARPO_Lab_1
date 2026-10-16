@@ -1,0 +1,3 @@
+COM_CASE,bus_failure
+CREATE_RESULT,status=-21,system_queries=1,bus_queries=1,memory_queries=0,allocations=0
+COM_SUMMARY,case=bus_failure,checks=4,failures=0,refs=1,memory_refs=1,live=0
