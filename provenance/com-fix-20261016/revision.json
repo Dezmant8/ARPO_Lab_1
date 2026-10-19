@@ -23,12 +23,12 @@
     {
       "path": "README.md",
       "before_sha256": "6a5d46e7df79df67c37680691f1ded87615684022b452004cff65d0488a9a820",
-      "after_sha256": "273f93354e4061818b44848c2a2a3adea8031795bbdcab767ff4d1aade3fcd28"
+      "after_sha256": "f3e6ad3b9cab1980f883e488b266a1040d1ee0f290699e72b36385f28c34a765"
     },
     {
       "path": "COM-FIX.md",
       "before_sha256": null,
-      "after_sha256": "14cd8374c03dbb389fd70b3bdc229738d2710a2081d5adbbe92498badccec40c"
+      "after_sha256": "0581b9f1812c52fb42df1b816cfd73f27fe84f3ddb1ea3e7f1a7d318414d125d"
     },
     {
       "path": "checks/com-contract.c",
@@ -567,8 +567,10 @@
     }
   ],
   "limitations": [
-    "The lecturer did not identify the two intended properties.",
+    "The COM checks cover the documented scenarios and are not a formal proof of correctness.",
     "The identity matrix passed on the baseline; confirmed failures concern ownership, creation errors and unsupported aggregation.",
     "The original report and performance measurements describe the historical version."
-  ]
+  ],
+  "documentation_updated_on": "2026-10-19",
+  "documentation_changes": "Neutral technical descriptions and direct README links to the changed source files; tested code, logs and measurements unchanged."
 }
